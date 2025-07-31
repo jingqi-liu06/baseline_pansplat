@@ -1,0 +1,19 @@
+[
+{
+  "directory": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/build",
+  "command": "/usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -c /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/backward.cu -o CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/backward.cu.o && /usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -M /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/backward.cu -MT CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/backward.cu.o -o $DEP_FILE",
+  "file": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/backward.cu"
+},
+
+{
+  "directory": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/build",
+  "command": "/usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -c /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu -o CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/forward.cu.o && /usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -M /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu -MT CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/forward.cu.o -o $DEP_FILE",
+  "file": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/forward.cu"
+},
+
+{
+  "directory": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/build",
+  "command": "/usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -c /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/rasterizer_impl.cu -o CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/rasterizer_impl.cu.o && /usr/local/cuda-12.1/bin/nvcc   -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer -I/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/third_party/glm  -g   -x cu -M /baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/rasterizer_impl.cu -MT CMakeFiles/CudaRasterizer.dir/cuda_rasterizer/rasterizer_impl.cu.o -o $DEP_FILE",
+  "file": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization/cuda_rasterizer/rasterizer_impl.cu"
+}
+]

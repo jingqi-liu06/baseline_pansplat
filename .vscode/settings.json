@@ -1,0 +1,23 @@
+{
+    "cmake.sourceDirectory": "/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/PanSplat/submodules/diff-gaussian-rasterization",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.generator": "Unix Makefiles",
+    "cmake.configureSettings": {
+        "CMAKE_CUDA_COMPILER": "/usr/local/cuda/bin/nvcc",
+        "CMAKE_CUDA_ARCHITECTURES": "70;75;86",
+        "CMAKE_BUILD_TYPE": "Release"
+    },
+    "cmake.configureOnOpen": true,
+    "cmake.configureOnEdit": true,
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "files.associations": {
+        "*.cu": "cuda-cpp",
+        "*.cuh": "cuda-cpp",
+        "*.h": "c",
+        "*.hpp": "cpp"
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python-envs.pythonProjects": []
+}

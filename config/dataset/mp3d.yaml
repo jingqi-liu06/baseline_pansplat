@@ -1,0 +1,42 @@
+defaults:
+  - view_sampler: bounded
+
+name: mp3d
+roots: [/baai-cwm-vepfs/cwm/jingqi.liu/pre_exp/data/pansplat]
+make_baseline_1: false
+augment: true
+
+# JSON数据索引文件路径，如果设置了此项，将直接从JSON加载数据而不扫描文件夹
+# data_json_path: "data_index_train_512x256.json"
+data_json_path: null
+
+image_shape: [256, 512]
+background_color: [0.0, 0.0, 0.0]
+cameras_are_circular: false
+
+max_fov: 100.0
+
+skip_bad_shape: true
+near: .45
+far: 10.
+baseline_scale_bounds: false
+shuffle_val: false
+test_len: -1
+test_chunk_interval: 1
+
+test_datasets:
+  - name: m3d
+    dis: 0.1
+  - name: m3d
+    dis: 0.25
+  - name: m3d
+    dis: 0.5
+  - name: m3d
+    dis: 0.75
+  - name: m3d
+    dis: 1.0
+  - name: residential
+    dis: 0.15
+  - name: replica
+    dis: 0.5
+
