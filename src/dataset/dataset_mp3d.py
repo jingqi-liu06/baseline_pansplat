@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 import os
-import json
 
 import torch
 import torchvision.transforms as tf
@@ -37,7 +36,6 @@ class DatasetMP3DCfg(DatasetCfgCommon):
     far: float = -1.0
     baseline_scale_bounds: bool = True
     shuffle_val: bool = False
-    data_json_path: str = None  # JSON文件路径，如果提供则直接从JSON加载数据
 
 
 class DatasetMP3D(Dataset):
@@ -52,9 +50,9 @@ class DatasetMP3D(Dataset):
 
     def __init__(
         self,
-        cfg: DatasetMP3DCfg, # 数据集配置对象
-        stage: Stage, # 训练阶段（"train", "val", "test", "predict"）
-        view_sampler: ViewSampler, # 视角采样器，用于选择合适的视角组合
+        cfg: DatasetMP3DCfg,
+        stage: Stage,
+        view_sampler: ViewSampler,
     ) -> None:
         super().__init__()
         self.cfg = cfg
@@ -75,8 +73,6 @@ class DatasetMP3D(Dataset):
         height = max(height, 512)
         resolution = (height * 2, height)
         resolution = 'x'.join(map(str, resolution))
-        
-        # 不同阶段的数据路径管理
         if stage == "test":
             self.roots = []
             for test_dataset in cfg.test_datasets:
@@ -88,70 +84,27 @@ class DatasetMP3D(Dataset):
         else:
             self.roots = [r / f"png_render_{stage}_{resolution}_seq_len_3_m3d_dist_0.5" for r in cfg.roots]
 
-        # 场景数据索引构建
         data = []
-        
-        # 如果指定了JSON文件路径，优先从JSON加载
-        if hasattr(cfg, 'data_json_path') and cfg.data_json_path and os.path.exists(cfg.data_json_path):
-            print(f"Loading data from JSON file: {cfg.data_json_path}")
-            with open(cfg.data_json_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            # 将字符串路径转换回Path对象
-            for item in data:
-                item['root'] = Path(item['root'])
-        else:
-            # 原有的数据构建逻辑
-            for root, test_dataset in zip(self.roots, cfg.test_datasets):
-                if not os.path.exists(root):
-                    print(f"Warning: Root path does not exist: {root}")
-                    continue
-                scenes = os.listdir(root)
-                scenes.sort()
-                for s in scenes:
-                    data.append({
-                        'root': root,
-                        'scene_id': s,
-                        'name': test_dataset["name"],
-                        'dis': test_dataset["dis"],
-                        'baseline': test_dataset["dis"] * 2,
-                    })
-            
-            # 保存data列表为JSON文件
-            json_save_path = f"data_index_{stage}_{resolution}.json"
-            self.save_data_to_json(data, json_save_path)
-            print(f"Data index saved to: {json_save_path}")
-            
+        for root, test_dataset in zip(self.roots, cfg.test_datasets):
+            if not os.path.exists(root):
+                continue
+            scenes = os.listdir(root)
+            scenes.sort()
+            for s in scenes:
+                data.append({
+                    'root': root,
+                    'scene_id': s,
+                    'name': test_dataset["name"],
+                    'dis': test_dataset["dis"],
+                    'baseline': test_dataset["dis"] * 2,
+                })
         self.data = data
 
         if self.cfg.overfit_to_scene is not None:
             data = [d for d in self.data if d["scene_id"] == self.cfg.overfit_to_scene]
-            # 单个场景的数据重复 data 次
             self.data = data * (len(self.data) // 100)
 
         self.e2c_mono = Equirec2Cube(512, 1024, 256)
-
-    def save_data_to_json(self, data, json_path):
-        """保存data列表到JSON文件"""
-        # 将Path对象转换为字符串以便JSON序列化
-        json_data = []
-        for item in data:
-            json_item = item.copy()
-            json_item['root'] = str(json_item['root'])
-            json_data.append(json_item)
-        
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(json_data, f, indent=2, ensure_ascii=False)
-
-    def load_data_from_json(self, json_path):
-        """从JSON文件加载data列表"""
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        # 将字符串路径转换回Path对象
-        for item in data:
-            item['root'] = Path(item['root'])
-        
-        return data
 
     def __getitem__(self, idx):
         data = self.data[idx].copy()
@@ -196,11 +149,10 @@ class DatasetMP3D(Dataset):
         extrinsics = self.convert_poses(trans, rots)
 
         # Resize the world to make the baseline 1.
-        # Multiply all coordinates by the same scaling factor -> 1/scale
         context_extrinsics = extrinsics[context_indices]
         if context_extrinsics.shape[0] == 2 and self.cfg.make_baseline_1:
             a, b = context_extrinsics[:, :3, 3]
-            scale = (a - b).norm() # calculate baseline
+            scale = (a - b).norm()
             extrinsics[:, :3, 3] /= scale
         else:
             scale = 1
