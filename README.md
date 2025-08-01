@@ -1,1 +1,1 @@
-Copy from PanSplat (url: https://github.com/chengzhag/PanSplat)
+# Copy from [PanSplat](https://github.com/chengzhag/PanSplat)
