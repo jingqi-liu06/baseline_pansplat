@@ -146,7 +146,7 @@ class DatasetMP3D(Dataset):
             rots.append(np.loadtxt(rot_path))
         trans = torch.tensor(trans)
         rots = torch.tensor(rots)
-        extrinsics = self.convert_poses(trans, rots)
+        extrinsics = self.convert_poses(trans, rots) # extrinsics shape: (num_views, 4, 4)
 
         # Resize the world to make the baseline 1.
         context_extrinsics = extrinsics[context_indices]
