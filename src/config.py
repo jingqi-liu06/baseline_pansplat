@@ -72,10 +72,22 @@ T = TypeVar("T")
 
 
 def load_typed_config(
-    cfg: DictConfig,
-    data_class: Type[T],
+    cfg: DictConfig, 
+    data_class: Type[T], 
     extra_type_hooks: dict = {},
-) -> T:
+    ) -> T:
+    """
+    将一个原始的、无类型的配置字典 (cfg)，
+    填充到一个指定类型的 dataclass 模板 (data_class) 中，
+    并返回一个填充好的、类型严格的 dataclass 实例
+    假设你有一个字典 {'max_epochs': 10, 'deterministic': True} 
+    和一个 TrainerCfg 的 dataclass，
+    调用 load_typed_config 就会返回一个 
+    TrainerCfg(max_epochs=10, deterministic=True) 的对象。
+    """
+    # from_dict(...)是 dacite 库的核心功能。
+    # 它接收一个 dataclass 类和一个字典，
+    # 然后尝试创建一个该类的实例，并将字典中的值赋给对应的字段
     return from_dict(
         data_class,
         OmegaConf.to_container(cfg),

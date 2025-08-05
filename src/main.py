@@ -44,6 +44,8 @@ def cyan(text: str) -> str:
     config_path="../config",
     config_name="main",
 )
+# 通过@hydra.main装饰器，指定配置文件路径和名称，获取到yaml配置文件。并对train函数进行装饰，
+# 使其能够接收配置参数；并且将配置参数传递给train函数的cfg_dict参数。
 def train(cfg_dict: DictConfig):
     cfg = load_typed_root_config(cfg_dict) # 作用：将原始配置字典转换为强类型的配置对象
     set_cfg(cfg_dict) # 作用：设置全局配置，让整个项目都能访问配置参数
