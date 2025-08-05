@@ -86,7 +86,7 @@ def load_typed_config(
     TrainerCfg(max_epochs=10, deterministic=True) 的对象。
     """
     # from_dict(...)是 dacite 库的核心功能。
-    # 它接收一个 dataclass 类和一个字典，
+    # 它接收一个 ** dataclass类和一个字典 **，
     # 然后尝试创建一个该类的实例，并将字典中的值赋给对应的字段
     return from_dict(
         data_class,
@@ -107,6 +107,18 @@ def separate_loss_cfg_wrappers(joined: dict) -> list[LossCfgWrapper]:
         load_typed_config(DictConfig({"dummy": {k: v}}), Dummy).dummy
         for k, v in joined.items()
     ]
+    '''
+    load_typed_config(DictConfig({"dummy": {"mse": {"weight":1.0}}}), Dummy)
+    结果是：
+    Dummy(dummy=LossMseCfgWrapper(weight=1.0))
+    from_dict 检查 Dummy 模板，发现 dummy 字段的类型是 LossCfgWrapper，
+    它知道 LossCfgWrapper 是一个联合类型 (LossMseCfgWrapper | LossLpipsCfgWrapper | ...)
+    当目标是联合类型，而提供的数据是一个只包含单个键的字典时，dacite 会启用一个非常智能的推断机制：
+    它会用这个唯一的键（这里是 "mse"）来决定应该使用联合类型中的哪一个具体类型。
+    from_dict 就会递归调用自己
+    
+    Dummy(dummy=LossMseCfgWrapper(weight=1.0))
+    '''
 
 
 def load_typed_root_config(cfg: DictConfig) -> RootCfg:
