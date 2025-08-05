@@ -97,10 +97,12 @@ def load_typed_config(
 
 def separate_loss_cfg_wrappers(joined: dict) -> list[LossCfgWrapper]:
     # The dummy allows the union to be converted.
+    # 1. 定义一个临时的 "包裹" dataclass
     @dataclass
     class Dummy:
         dummy: LossCfgWrapper
 
+    # 2. 列表推导式，遍历 YAML 中的 loss 字典
     return [
         load_typed_config(DictConfig({"dummy": {k: v}}), Dummy).dummy
         for k, v in joined.items()
