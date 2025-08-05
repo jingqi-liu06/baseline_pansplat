@@ -45,8 +45,8 @@ def cyan(text: str) -> str:
     config_name="main",
 )
 def train(cfg_dict: DictConfig):
-    cfg = load_typed_root_config(cfg_dict)
-    set_cfg(cfg_dict)
+    cfg = load_typed_root_config(cfg_dict) # 作用：将原始配置字典转换为强类型的配置对象
+    set_cfg(cfg_dict) # 作用：设置全局配置，让整个项目都能访问配置参数
 
     # Set up the output directory.
     if cfg_dict.output_dir is None:
