@@ -78,6 +78,7 @@ trainer:
   limit_predict_batches: null
   precision: 32
   deterministic: false
+  devices: 1  # or "auto" for all available GPUs
 
 output_dir: null
 
