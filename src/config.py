@@ -44,6 +44,7 @@ class TrainerCfg:
     deterministic: bool
 
 
+# 这是整个项目的主配置类，包含所有子配置
 @dataclass
 class RootCfg:
     wandb: dict
@@ -107,17 +108,25 @@ def separate_loss_cfg_wrappers(joined: dict) -> list[LossCfgWrapper]:
         load_typed_config(DictConfig({"dummy": {k: v}}), Dummy).dummy
         for k, v in joined.items()
     ]
+    # k = "mse", v = {"weight": 1.0}
+    # 步骤1：创建临时结构
+    # temp_dict = {"dummy": {"mse": {"weight": 1.0}}}
+    # temp_config = DictConfig(temp_dict)
+    # 步骤2：调用load_typed_config
+    # result = load_typed_config(temp_config, Dummy)
+    # Dummy(dummy={"mse": {"weight": 1.0}})
+
+    # - dacite看到Dummy类有一个dummy字段，类型是LossCfgWrapper
+    # - LossCfgWrapper是联合类型：LossMseCfgWrapper | LossLpipsCfgWrapper | ...
+    # - dacite看到数据{"mse": {"weight": 1.0}}有唯一键"mse"
+    # - 它知道"mse"对应LossMseCfgWrapper类型
+    # - 所以创建：LossMseCfgWrapper(mse=LossMseCfg(weight=1.0))
     '''
-    load_typed_config(DictConfig({"dummy": {"mse": {"weight":1.0}}}), Dummy)
-    结果是：
-    Dummy(dummy=LossMseCfgWrapper(weight=1.0))
-    from_dict 检查 Dummy 模板，发现 dummy 字段的类型是 LossCfgWrapper，
-    它知道 LossCfgWrapper 是一个联合类型 (LossMseCfgWrapper | LossLpipsCfgWrapper | ...)
-    当目标是联合类型，而提供的数据是一个只包含单个键的字典时，dacite 会启用一个非常智能的推断机制：
-    它会用这个唯一的键（这里是 "mse"）来决定应该使用联合类型中的哪一个具体类型。
-    from_dict 就会递归调用自己
-    
-    Dummy(dummy=LossMseCfgWrapper(weight=1.0))
+    e.g. 输出是：
+    [
+    LossMseCfgWrapper(mse=LossMseCfg(weight=1.0)),
+    LossLpipsCfgWrapper(lpips=LossLpipsCfg(weight=0.1, apply_after_step=1000))
+    ]
     '''
 
 
@@ -125,5 +134,5 @@ def load_typed_root_config(cfg: DictConfig) -> RootCfg:
     return load_typed_config(
         cfg,
         RootCfg,
-        {list[LossCfgWrapper]: separate_loss_cfg_wrappers},
+        {list[LossCfgWrapper]: separate_loss_cfg_wrappers}, #这是一个类型钩子（type hook）字典，告诉 dacite 库：当遇到 list[LossCfgWrapper] 类型时，使用 separate_loss_cfg_wrappers 函数来处理转换
     )
