@@ -186,6 +186,9 @@ def train(cfg_dict: DictConfig):
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     torch.set_float32_matmul_precision('high')
+    
+    # setting wandb envs for network issues
+    # os.environ["WANDB_MODE"] = "offline"  # Set to offline mode
 
     if 'SLURM_NTASKS' in os.environ:
         del os.environ["SLURM_NTASKS"]
